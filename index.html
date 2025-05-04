@@ -560,7 +560,7 @@
     <div class="container">
         <img src="https://iili.io/3WXIw8b.png" alt="Dia das mães com Escola Amadeus" class="header-image">   
         <div class="header-text">
-            <h2>"Indique uma mãe que ainda não faz parte da comunidade Amadeus e as duas, juntas, concorrerão ao sorteio “Cheirinho de Mãe”: duas cestas perfumadas, uma para cada mãe, feita com carinho para celebrar esse dia especial!."</h2>
+            <h2>"Indique uma mãe que ainda não faz parte da comunidade Amadeus e as duas, juntas, concorrerão ao sorteio "Cheirinho de Mãe": duas cestas perfumadas, uma para cada mãe, feita com carinho para celebrar esse dia especial!."</h2>
             <div class="date-badge">Sorteio: 17 de Maio de 2025</div>
         </div>
         
@@ -799,7 +799,7 @@
             }
         });
 
-        // Enviar formulário para o webhook do n8n
+        // Enviar formulário para o webhook do n8n - VERSÃO CORRIGIDA
         document.getElementById('indicacaoForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -810,7 +810,7 @@
                 formObject[key] = value;
             });
             
-            // URL do seu webhook n8n (você precisará substituir pela URL real)
+            // URL do seu webhook n8n
             const webhookUrl = 'https://pedrologapp.app.n8n.cloud/webhook/campanha-maes';
             
             // Animação do botão durante o envio
@@ -827,27 +827,24 @@
                 },
                 body: JSON.stringify(formObject)
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('successMessage').style.display = 'block';
-                    document.getElementById('errorMessage').style.display = 'none';
-                    document.getElementById('indicacaoForm').reset();
-                    // Atualizar etapas do progresso
-                    document.querySelectorAll('.progress-step')[0].classList.remove('active');
-                    document.querySelectorAll('.progress-step')[1].classList.add('active');
-                    // Rolando para a mensagem de sucesso
-                    document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
-                } else {
-                    document.getElementById('errorMessage').style.display = 'block';
-                    document.getElementById('successMessage').style.display = 'none';
-                    document.getElementById('errorMessage').textContent = data.message || 'Ocorreu um erro ao enviar sua indicação.';
-                    document.getElementById('errorMessage').scrollIntoView({ behavior: 'smooth' });
-                    // Restaurar botão
-                    button.innerHTML = 'Participar da Campanha';
-                    button.disabled = false;
-                    button.classList.add('animate__pulse', 'animate__infinite');
+            .then(response => {
+                // Primeiro, verifica se a resposta foi OK
+                if (!response.ok) {
+                    throw new Error('Erro na resposta do servidor');
                 }
+                // Tenta converter para JSON, se falhar retorna objeto vazio
+                return response.json().catch(() => ({ success: true }));
+            })
+            .then(data => {
+                // Considera sucesso se chegou até aqui
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('errorMessage').style.display = 'none';
+                document.getElementById('indicacaoForm').reset();
+                // Atualizar etapas do progresso
+                document.querySelectorAll('.progress-step')[0].classList.remove('active');
+                document.querySelectorAll('.progress-step')[1].classList.add('active');
+                // Rolando para a mensagem de sucesso
+                document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
             })
             .catch(error => {
                 console.error('Erro:', error);

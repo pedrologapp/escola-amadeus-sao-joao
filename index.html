@@ -799,9 +799,28 @@
             }
         });
 
-        // Enviar formulário para o webhook do n8n - VERSÃO CORRIGIDA
+        // Validação de telefones diferentes
+        function validateDifferentPhones() {
+            const whatsappMae = document.getElementById('whatsappMae').value.replace(/\D/g, '');
+            const whatsappAmiga = document.getElementById('whatsappAmiga').value.replace(/\D/g, '');
+            
+            if (whatsappMae && whatsappAmiga && whatsappMae === whatsappAmiga) {
+                return false;
+            }
+            return true;
+        }
+
+        // Enviar formulário para o webhook do n8n - VERSÃO CORRIGIDA COM VALIDAÇÃO DE TELEFONE
         document.getElementById('indicacaoForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            // Validar se os telefones são diferentes
+            if (!validateDifferentPhones()) {
+                alert('O número de WhatsApp da mãe deve ser diferente do número da amiga indicada.');
+                document.getElementById('whatsappAmiga').style.borderColor = '#dc3545';
+                document.getElementById('whatsappAmiga').focus();
+                return;
+            }
             
             const formData = new FormData(this);
             const formObject = {};
@@ -836,14 +855,19 @@
                 return response.json().catch(() => ({ success: true }));
             })
             .then(data => {
-                // Considera sucesso se chegou até aqui
+                // Mostra mensagem de sucesso
                 document.getElementById('successMessage').style.display = 'block';
                 document.getElementById('errorMessage').style.display = 'none';
                 document.getElementById('indicacaoForm').reset();
-                // Atualizar etapas do progresso
-                document.querySelectorAll('.progress-step')[0].classList.remove('active');
-                document.querySelectorAll('.progress-step')[1].classList.add('active');
-                // Rolando para a mensagem de sucesso
+                
+                // Atualiza a barra de progresso de forma mais robusta
+                const progressSteps = document.querySelectorAll('.progress-step');
+                if (progressSteps.length >= 2) {
+                    progressSteps[0].classList.remove('active');
+                    progressSteps[1].classList.add('active');
+                }
+                
+                // Rola para a mensagem de sucesso
                 document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
             })
             .catch(error => {
@@ -857,6 +881,16 @@
                 button.disabled = false;
                 button.classList.add('animate__pulse', 'animate__infinite');
             });
+        });
+        
+        // Adicionar validação em tempo real para números de telefone
+        document.getElementById('whatsappAmiga').addEventListener('blur', function() {
+            if (!validateDifferentPhones()) {
+                this.style.borderColor = '#dc3545';
+                alert('O número de WhatsApp da amiga deve ser diferente do seu número.');
+            } else {
+                this.style.borderColor = '';
+            }
         });
     </script>
 </body>

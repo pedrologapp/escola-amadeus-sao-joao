@@ -554,6 +554,102 @@
         .input-icon-wrapper:focus-within .input-icon {
             color: var(--primary);
         }
+
+        /* Estilos para a tela de confirmação */
+        #confirmationScreen {
+            display: none;
+        }
+
+        .confirmation-data {
+            background-color: var(--gray-light);
+            border-radius: 14px;
+            padding: 28px;
+            margin-bottom: 35px;
+        }
+
+        .confirmation-data h3 {
+            color: var(--primary);
+            font-size: 1.4rem;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px dashed rgba(232, 62, 140, 0.2);
+            display: flex;
+            align-items: center;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .confirmation-data h3 .icon {
+            margin-right: 14px;
+            font-size: 1.6rem;
+        }
+
+        .data-row {
+            display: flex;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .data-label {
+            font-weight: 600;
+            color: var(--dark);
+            flex: 0 0 200px;
+        }
+
+        .data-value {
+            color: var(--secondary);
+            flex: 1;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: white;
+            padding: 16px 28px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            box-shadow: 0 6px 15px rgba(108, 117, 125, 0.3);
+            font-family: 'Montserrat', sans-serif;
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(73, 80, 87, 0.4);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 16px 28px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            box-shadow: 0 6px 15px rgba(232, 62, 140, 0.3);
+            font-family: 'Montserrat', sans-serif;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(232, 62, 140, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -566,15 +662,15 @@
         
         <div class="content">
             <div class="progress-container fade-in-up">
-                <div class="progress-step active">
+                <div class="progress-step active" id="step1">
                     <div class="step-circle">1</div>
                     <div class="step-text">Preencher</div>
                 </div>
-                <div class="progress-step">
+                <div class="progress-step" id="step2">
                     <div class="step-circle">2</div>
                     <div class="step-text">Confirmar</div>
                 </div>
-                <div class="progress-step">
+                <div class="progress-step" id="step3">
                     <div class="step-circle">3</div>
                     <div class="step-text">Concorrer</div>
                 </div>
@@ -586,132 +682,205 @@
                 <div class="counter-label">mães participando</div>
             </div>
             
-            <div class="campaign-rules fade-in-up">
-                <h3><i class="fas fa-info-circle"></i> Como funciona:</h3>
-                <ul>
-                    <li>Preencha o formulário com seus dados e os dados de uma amiga que mora nas proximidades da Escola Amadeus, e que você acredita que compartilharia dos valores educacionais da nossa comunidade</li>
-                    <li>Ambas receberão uma mensagem de confirmação via WhatsApp</li>
-                    <li>Após a confirmação, vocês receberão por WhatsApp/e-mail um número para participar do sorteio</li>
-                    <li>O sorteio será realizado no dia 17/05/2025 durante o evento das mães na escola</li>
-                    <li>As duas ganharão uma cesta especial de Dia das Mães!</li>
-                </ul>
+            <!-- Tela de Formulário -->
+            <div id="formScreen">
+                <div class="campaign-rules fade-in-up">
+                    <h3><i class="fas fa-info-circle"></i> Como funciona:</h3>
+                    <ul>
+                        <li>Preencha o formulário com seus dados e os dados de uma amiga que mora nas proximidades da Escola Amadeus, e que você acredita que compartilharia dos valores educacionais da nossa comunidade</li>
+                        <li>Ambas receberão uma mensagem de confirmação via WhatsApp</li>
+                        <li>Após a confirmação, vocês receberão por WhatsApp/e-mail um número para participar do sorteio</li>
+                        <li>O sorteio será realizado no dia 17/05/2025 durante o evento das mães na escola</li>
+                        <li>As duas ganharão uma cesta especial de Dia das Mães!</li>
+                    </ul>
+                </div>
+                
+                <form id="indicacaoForm">
+                    <!-- Dados da Participante (Mãe da Escola Amadeus) -->
+                    <div class="form-section fade-in-up">
+                        <h3><span class="icon">👩‍👦</span> Seus dados (Mãe da Escola Amadeus)</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group col input-icon-wrapper">
+                                <i class="fas fa-user input-icon"></i>
+                                <label for="nomeMae">Nome completo</label>
+                                <input type="text" id="nomeMae" name="nomeMae" class="input-with-icon" placeholder="Seu nome completo" required>
+                            </div>
+                            
+                            <div class="form-group col input-icon-wrapper">
+                                <i class="fab fa-whatsapp input-icon"></i>
+                                <label for="whatsappMae">WhatsApp</label>
+                                <input type="tel" id="whatsappMae" name="whatsappMae" class="input-with-icon" placeholder="(00) 00000-0000" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group col input-icon-wrapper">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <label for="emailMae">E-mail</label>
+                                <input type="email" id="emailMae" name="emailMae" class="input-with-icon" placeholder="seu.email@exemplo.com" required>
+                            </div>
+                            
+                            <div class="form-group col input-icon-wrapper">
+                                <i class="fas fa-child input-icon"></i>
+                                <label for="nomeFilhoMae">Nome do(a) seu(sua) filho(a) na Amadeus</label>
+                                <input type="text" id="nomeFilhoMae" name="nomeFilhoMae" class="input-with-icon" placeholder="Nome do seu filho ou filha" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Dados da Amiga Indicada -->
+                    <div class="form-section fade-in-up">
+                        <h3><span class="icon">👩‍❤️‍👩</span> Dados da amiga indicada</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group col input-icon-wrapper">
+                                <i class="fas fa-user-friends input-icon"></i>
+                                <label for="nomeAmiga">Nome completo da amiga</label>
+                                <input type="text" id="nomeAmiga" name="nomeAmiga" class="input-with-icon" placeholder="Nome completo da sua amiga" required>
+                            </div>
+                            
+                            <div class="form-group col input-icon-wrapper">
+                                <i class="fab fa-whatsapp input-icon"></i>
+                                <label for="whatsappAmiga">WhatsApp da amiga</label>
+                                <input type="tel" id="whatsappAmiga" name="whatsappAmiga" class="input-with-icon" placeholder="(00) 00000-0000" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group col input-icon-wrapper">
+                                <i class="fas fa-map-marker-alt input-icon"></i>
+                                <label for="cidadeAmiga">Cidade</label>
+                                <input type="text" id="cidadeAmiga" name="cidadeAmiga" class="input-with-icon" placeholder="Cidade onde sua amiga mora" required>
+                            </div>
+                            
+                            <div class="form-group col input-icon-wrapper">
+                                <i class="fas fa-map input-icon"></i>
+                                <label for="bairroAmiga">Bairro</label>
+                                <input type="text" id="bairroAmiga" name="bairroAmiga" class="input-with-icon" placeholder="Bairro onde sua amiga mora" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group col input-icon-wrapper">
+                                <i class="fas fa-child input-icon"></i>
+                                <label for="nomeFilhoAmiga">Nome do(a) filho(a) da sua amiga</label>
+                                <input type="text" id="nomeFilhoAmiga" name="nomeFilhoAmiga" class="input-with-icon" placeholder="Nome do filho ou filha da sua amiga" required>
+                            </div>
+                            
+                            <div class="form-group col input-icon-wrapper">
+                                <i class="fas fa-school input-icon"></i>
+                                <label for="escolaFilhoAmiga">Escola onde o(a) filho(a) da sua amiga estuda</label>
+                                <input type="text" id="escolaFilhoAmiga" name="escolaFilhoAmiga" class="input-with-icon" placeholder="Nome da escola" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="serieFilhoAmiga">Série/ano que o(a) filho(a) da sua amiga está cursando</label>
+                            <select id="serieFilhoAmiga" name="serieFilhoAmiga" required>
+                                <option value="">Selecione a série/ano...</option>
+                                <option value="Berçário">Berçário</option>
+                                <option value="Maternal">Maternal</option>
+                                <option value="Jardim">Jardim</option>
+                                <option value="Pré-escola">Pré-escola</option>
+                                <option value="1º Ano">1º Ano - Ensino Fundamental</option>
+                                <option value="2º Ano">2º Ano - Ensino Fundamental</option>
+                                <option value="3º Ano">3º Ano - Ensino Fundamental</option>
+                                <option value="4º Ano">4º Ano - Ensino Fundamental</option>
+                                <option value="5º Ano">5º Ano - Ensino Fundamental</option>
+                                <option value="6º Ano">6º Ano - Ensino Fundamental</option>
+                                <option value="7º Ano">7º Ano - Ensino Fundamental</option>
+                                <option value="8º Ano">8º Ano - Ensino Fundamental</option>
+                                <option value="9º Ano">9º Ano - Ensino Fundamental</option>
+                            </select>
+                        </div>
+
+                        </div>
+                    </div>
+                    
+                    <!-- Perguntas Adicionais -->
+                    <div class="form-section fade-in-up">
+                        <h3><span class="icon">✓</span> Informações adicionais</h3>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="termoConsentimento" name="termoConsentimento" value="Sim" required>
+                            <label for="termoConsentimento"> Ciente que os dados compartilhados são veridicos (serão verificados com ambas as partes) e autorizo o contato da escola com a pessoa indicada</label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="animate__animated animate__pulse animate__infinite animate__slower">
+                        Revisar Dados
+                    </button>
+                </form>
             </div>
             
-            <form id="indicacaoForm">
-                <!-- Dados da Participante (Mãe da Escola Amadeus) -->
-                <div class="form-section fade-in-up">
-                    <h3><span class="icon">👩‍👦</span> Seus dados (Mãe da Escola Amadeus)</h3>
+            <!-- Tela de Confirmação -->
+            <div id="confirmationScreen" class="animate__animated">
+                <div class="confirmation-data">
+                    <h3><span class="icon">📋</span> Confirme seus dados</h3>
                     
-                    <div class="form-row">
-                        <div class="form-group col input-icon-wrapper">
-                            <i class="fas fa-user input-icon"></i>
-                            <label for="nomeMae">Nome completo</label>
-                            <input type="text" id="nomeMae" name="nomeMae" class="input-with-icon" placeholder="Seu nome completo" required>
+                    <div class="confirmation-data">
+                        <h3><span class="icon">👩‍👦</span> Seus dados</h3>
+                        <div class="data-row">
+                            <span class="data-label">Nome completo:</span>
+                            <span class="data-value" id="confirmNomeMae"></span>
                         </div>
-                        
-                        <div class="form-group col input-icon-wrapper">
-                            <i class="fab fa-whatsapp input-icon"></i>
-                            <label for="whatsappMae">WhatsApp</label>
-                            <input type="tel" id="whatsappMae" name="whatsappMae" class="input-with-icon" placeholder="(00) 00000-0000" required>
+                        <div class="data-row">
+                            <span class="data-label">WhatsApp:</span>
+                            <span class="data-value" id="confirmWhatsappMae"></span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">E-mail:</span>
+                            <span class="data-value" id="confirmEmailMae"></span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Nome do(a) filho(a):</span>
+                            <span class="data-value" id="confirmNomeFilhoMae"></span>
                         </div>
                     </div>
                     
-                    <div class="form-row">
-                        <div class="form-group col input-icon-wrapper">
-                            <i class="fas fa-envelope input-icon"></i>
-                            <label for="emailMae">E-mail</label>
-                            <input type="email" id="emailMae" name="emailMae" class="input-with-icon" placeholder="seu.email@exemplo.com" required>
+                    <div class="confirmation-data">
+                        <h3><span class="icon">👩‍❤️‍👩</span> Dados da amiga indicada</h3>
+                        <div class="data-row">
+                            <span class="data-label">Nome completo:</span>
+                            <span class="data-value" id="confirmNomeAmiga"></span>
                         </div>
-                        
-                        <div class="form-group col input-icon-wrapper">
-                            <i class="fas fa-child input-icon"></i>
-                            <label for="nomeFilhoMae">Nome do(a) seu(sua) filho(a) na Amadeus</label>
-                            <input type="text" id="nomeFilhoMae" name="nomeFilhoMae" class="input-with-icon" placeholder="Nome do seu filho ou filha" required>
+                        <div class="data-row">
+                            <span class="data-label">WhatsApp:</span>
+                            <span class="data-value" id="confirmWhatsappAmiga"></span>
                         </div>
-                    </div>
-                </div>
-                
-                <!-- Dados da Amiga Indicada -->
-                <div class="form-section fade-in-up">
-                    <h3><span class="icon">👩‍❤️‍👩</span> Dados da amiga indicada</h3>
-                    
-                    <div class="form-row">
-                        <div class="form-group col input-icon-wrapper">
-                            <i class="fas fa-user-friends input-icon"></i>
-                            <label for="nomeAmiga">Nome completo da amiga</label>
-                            <input type="text" id="nomeAmiga" name="nomeAmiga" class="input-with-icon" placeholder="Nome completo da sua amiga" required>
+                        <div class="data-row">
+                            <span class="data-label">Cidade:</span>
+                            <span class="data-value" id="confirmCidadeAmiga"></span>
                         </div>
-                        
-                        <div class="form-group col input-icon-wrapper">
-                            <i class="fab fa-whatsapp input-icon"></i>
-                            <label for="whatsappAmiga">WhatsApp da amiga</label>
-                            <input type="tel" id="whatsappAmiga" name="whatsappAmiga" class="input-with-icon" placeholder="(00) 00000-0000" required>
+                        <div class="data-row">
+                            <span class="data-label">Bairro:</span>
+                            <span class="data-value" id="confirmBairroAmiga"></span>
                         </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group col input-icon-wrapper">
-                            <i class="fas fa-map-marker-alt input-icon"></i>
-                            <label for="cidadeAmiga">Cidade</label>
-                            <input type="text" id="cidadeAmiga" name="cidadeAmiga" class="input-with-icon" placeholder="Cidade onde sua amiga mora" required>
+                        <div class="data-row">
+                            <span class="data-label">Nome do(a) filho(a):</span>
+                            <span class="data-value" id="confirmNomeFilhoAmiga"></span>
                         </div>
-                        
-                        <div class="form-group col input-icon-wrapper">
-                            <i class="fas fa-map input-icon"></i>
-                            <label for="bairroAmiga">Bairro</label>
-                            <input type="text" id="bairroAmiga" name="bairroAmiga" class="input-with-icon" placeholder="Bairro onde sua amiga mora" required>
+                        <div class="data-row">
+                            <span class="data-label">Escola:</span>
+                            <span class="data-value" id="confirmEscolaFilhoAmiga"></span>
                         </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group col input-icon-wrapper">
-                            <i class="fas fa-child input-icon"></i>
-                            <label for="nomeFilhoAmiga">Nome do(a) filho(a) da sua amiga</label>
-                            <input type="text" id="nomeFilhoAmiga" name="nomeFilhoAmiga" class="input-with-icon" placeholder="Nome do filho ou filha da sua amiga" required>
+                        <div class="data-row">
+                            <span class="data-label">Série/ano:</span>
+                            <span class="data-value" id="confirmSerieFilhoAmiga"></span>
                         </div>
-                        
-                        <div class="form-group col input-icon-wrapper">
-                            <i class="fas fa-school input-icon"></i>
-                            <label for="escolaFilhoAmiga">Escola onde o(a) filho(a) da sua amiga estuda</label>
-                            <input type="text" id="escolaFilhoAmiga" name="escolaFilhoAmiga" class="input-with-icon" placeholder="Nome da escola" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="serieFilhoAmiga">Série/ano que o(a) filho(a) da sua amiga está cursando</label>
-                        <select id="serieFilhoAmiga" name="serieFilhoAmiga" required>
-                            <option value="">Selecione a série/ano...</option>
-                            <option value="Berçário">Berçário</option>
-                            <option value="Maternal">Maternal</option>
-                            <option value="Jardim">Jardim</option>
-                            <option value="Pré-escola">Pré-escola</option>
-                            <option value="1º Ano">1º Ano - Ensino Fundamental</option>
-                            <option value="2º Ano">2º Ano - Ensino Fundamental</option>
-                            <option value="3º Ano">3º Ano - Ensino Fundamental</option>
-                            <option value="4º Ano">4º Ano - Ensino Fundamental</option>
-                            <option value="5º Ano">5º Ano - Ensino Fundamental</option>
-                            <option value="6º Ano">6º Ano - Ensino Fundamental</option>
-                            <option value="7º Ano">7º Ano - Ensino Fundamental</option>
-                            <option value="8º Ano">8º Ano - Ensino Fundamental</option>
-                            <option value="9º Ano">9º Ano - Ensino Fundamental</option>
-                        </select>
                     </div>
                 </div>
-                
-                <!-- Perguntas Adicionais -->
-                <div class="form-section fade-in-up">
-                    <h3><span class="icon">✓</span> Informações adicionais</h3>
-                    
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="termoConsentimento" name="termoConsentimento" value="Sim" required>
-                        <label for="termoConsentimento"> Ciente que os dados compartilhados são veridicos (serão verificados com ambas as partes) e autorizo o contato da escola com a pessoa indicada</label>
-                    </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn-secondary" id="btnVoltar">
+                        <i class="fas fa-arrow-left"></i> Voltar para editar
+                    </button>
+                    <button type="button" id="btnConfirmar" class="btn-primary animate__animated animate__pulse animate__infinite animate__slower">
+                        <i class="fas fa-check"></i> Confirmar e Participar
+                    </button>
                 </div>
-                
-                <button type="submit" class="animate__animated animate__pulse animate__infinite animate__slower">
-                    Participar da Campanha
-                </button>
-            </form>
+            </div>
             
             <div id="successMessage" class="success-message animate__animated animate__fadeIn">
                 <h3><i class="fas fa-check-circle"></i> Parabéns! 🎉</h3>
@@ -732,6 +901,9 @@
     </div>
 
     <script>
+        // Armazenar dados do formulário
+        let formData = {};
+
         // Animações de scroll
         document.addEventListener('DOMContentLoaded', function() {
             const fadeElements = document.querySelectorAll('.fade-in-up');
@@ -810,7 +982,16 @@
             return true;
         }
 
-        // Enviar formulário para o webhook do n8n - VERSÃO ATUALIZADA COM TRATAMENTO DO ERRO 500
+        // Função para atualizar a barra de progresso
+        function updateProgress(step) {
+            // Remove active de todos os passos
+            document.querySelectorAll('.progress-step').forEach(el => el.classList.remove('active'));
+            
+            // Adiciona active ao passo atual
+            document.getElementById(`step${step}`).classList.add('active');
+        }
+
+        // Manipular envio do formulário (primeiro passo - ir para confirmação)
         document.getElementById('indicacaoForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -822,18 +1003,54 @@
                 return;
             }
             
-            const formData = new FormData(this);
-            const formObject = {};
+            // Coletar dados do formulário
+            const form = new FormData(this);
+            formData = {};
             
-            formData.forEach((value, key) => {
-                formObject[key] = value;
+            form.forEach((value, key) => {
+                formData[key] = value;
             });
             
-            // URL do seu webhook n8n
+            // Preencher tela de confirmação
+            document.getElementById('confirmNomeMae').textContent = formData.nomeMae;
+            document.getElementById('confirmWhatsappMae').textContent = formData.whatsappMae;
+            document.getElementById('confirmEmailMae').textContent = formData.emailMae;
+            document.getElementById('confirmNomeFilhoMae').textContent = formData.nomeFilhoMae;
+            document.getElementById('confirmNomeAmiga').textContent = formData.nomeAmiga;
+            document.getElementById('confirmWhatsappAmiga').textContent = formData.whatsappAmiga;
+            document.getElementById('confirmCidadeAmiga').textContent = formData.cidadeAmiga;
+            document.getElementById('confirmBairroAmiga').textContent = formData.bairroAmiga;
+            document.getElementById('confirmNomeFilhoAmiga').textContent = formData.nomeFilhoAmiga;
+            document.getElementById('confirmEscolaFilhoAmiga').textContent = formData.escolaFilhoAmiga;
+            document.getElementById('confirmSerieFilhoAmiga').textContent = formData.serieFilhoAmiga;
+            
+            // Mudar para tela de confirmação
+            document.getElementById('formScreen').style.display = 'none';
+            document.getElementById('confirmationScreen').style.display = 'block';
+            document.getElementById('confirmationScreen').classList.add('animate__fadeIn');
+            
+            // Atualizar progresso para etapa 2
+            updateProgress(2);
+            
+            // Rolar para o topo
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Botão voltar
+        document.getElementById('btnVoltar').addEventListener('click', function() {
+            document.getElementById('confirmationScreen').style.display = 'none';
+            document.getElementById('formScreen').style.display = 'block';
+            updateProgress(1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Botão confirmar e enviar
+        document.getElementById('btnConfirmar').addEventListener('click', function() {
+            // URL do webhook n8n
             const webhookUrl = 'https://pedrologapp.app.n8n.cloud/webhook/campanha-maes';
             
             // Animação do botão durante o envio
-            const button = document.querySelector('button[type="submit"]');
+            const button = this;
             const originalText = button.innerHTML;
             button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
             button.disabled = true;
@@ -848,7 +1065,7 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formObject),
+                body: JSON.stringify(formData),
                 signal: controller.signal
             })
             .then(response => {
@@ -867,25 +1084,21 @@
                 return response.json().catch(() => ({ success: true }));
             })
             .then(data => {
+                // Esconder tela de confirmação
+                document.getElementById('confirmationScreen').style.display = 'none';
+                
                 // Mostra mensagem de sucesso
                 document.getElementById('successMessage').style.display = 'block';
                 document.getElementById('errorMessage').style.display = 'none';
-                this.reset();
                 
-                // Atualiza a barra de progresso
-                const progressSteps = document.querySelectorAll('.progress-step');
-                if (progressSteps.length >= 2) {
-                    progressSteps[0].classList.remove('active');
-                    progressSteps[1].classList.add('active');
-                }
+                // Atualiza a barra de progresso para etapa 3
+                updateProgress(3);
+                
+                // Limpar formulário
+                document.getElementById('indicacaoForm').reset();
                 
                 // Rola para a mensagem de sucesso
                 document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
-                
-                // Restaura o botão
-                button.innerHTML = originalText;
-                button.disabled = false;
-                button.classList.add('animate__pulse', 'animate__infinite');
             })
             .catch(error => {
                 console.error('Erro:', error);

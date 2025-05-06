@@ -561,39 +561,36 @@
         }
 
         .confirmation-data {
-            background-color: var(--gray-light);
-            border-radius: 14px;
-            padding: 28px;
-            margin-bottom: 35px;
+            margin-bottom: 20px;
         }
 
         .confirmation-data h3 {
             color: var(--primary);
-            font-size: 1.4rem;
-            margin-bottom: 24px;
-            padding-bottom: 12px;
-            border-bottom: 2px dashed rgba(232, 62, 140, 0.2);
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: 600;
             display: flex;
             align-items: center;
-            font-family: 'Playfair Display', serif;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e9ecef;
         }
 
         .confirmation-data h3 .icon {
-            margin-right: 14px;
-            font-size: 1.6rem;
+            margin-right: 10px;
+            font-size: 1.3rem;
         }
 
         .data-row {
             display: flex;
-            margin-bottom: 15px;
-            padding: 10px 0;
-            border-bottom: 1px solid #e9ecef;
+            margin-bottom: 8px;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f1f1;
         }
 
         .data-label {
             font-weight: 600;
             color: var(--dark);
-            flex: 0 0 200px;
+            flex: 0 0 180px;
         }
 
         .data-value {
@@ -608,47 +605,39 @@
         }
 
         .btn-secondary {
-            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            background: #6c757d;
             color: white;
-            padding: 16px 28px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
+            font-size: 16px;
+            font-weight: 600;
             transition: all 0.3s;
-            box-shadow: 0 6px 15px rgba(108, 117, 125, 0.3);
-            font-family: 'Montserrat', sans-serif;
             flex: 1;
         }
 
         .btn-secondary:hover {
-            background: linear-gradient(135deg, #495057 0%, #343a40 100%);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(73, 80, 87, 0.4);
+            background: #495057;
+            transform: translateY(-2px);
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: var(--primary);
             color: white;
-            padding: 16px 28px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
+            font-size: 16px;
+            font-weight: 600;
             transition: all 0.3s;
-            box-shadow: 0 6px 15px rgba(232, 62, 140, 0.3);
-            font-family: 'Montserrat', sans-serif;
             flex: 1;
         }
 
         .btn-primary:hover {
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(232, 62, 140, 0.4);
+            background: var(--primary-dark);
+            transform: translateY(-2px);
         }
     </style>
 </head>
@@ -794,7 +783,6 @@
                                 <option value="9º Ano">9º Ano - Ensino Fundamental</option>
                             </select>
                         </div>
-</div>
                     </div>
                     
                     <!-- Perguntas Adicionais -->
@@ -813,8 +801,8 @@
                 </form>
             </div>
             
-            <!-- Tela de Confirmação -->
-            <div id="confirmationScreen" class="animate__animated">
+            <!-- Tela de Confirmação - Redesenhada conforme o screenshot -->
+            <div id="confirmationScreen" class="animate__animated" style="display:none;">
                 <div class="confirmation-data">
                     <h3><span class="icon">👩‍👦</span> Seus dados</h3>
                     <div class="data-row">
@@ -894,7 +882,6 @@
             </div>
         </div>
     </div>
-
     <script>
         // Armazenar dados do formulário
         let formData = {};
@@ -1019,8 +1006,10 @@
             document.getElementById('confirmEscolaFilhoAmiga').textContent = formData.escolaFilhoAmiga;
             document.getElementById('confirmSerieFilhoAmiga').textContent = formData.serieFilhoAmiga;
             
-            // Mudar para tela de confirmação
+            // IMPORTANTE: Ocultar completamente a tela de formulário
             document.getElementById('formScreen').style.display = 'none';
+            
+            // Mostrar a tela de confirmação
             document.getElementById('confirmationScreen').style.display = 'block';
             document.getElementById('confirmationScreen').classList.add('animate__fadeIn');
             

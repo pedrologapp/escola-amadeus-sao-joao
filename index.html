@@ -1028,32 +1028,71 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // Botão confirmar e enviar
-        document.getElementById('btnConfirmar').addEventListener('click', function() {
-            // URL do webhook n8n
-            const webhookUrl = 'https://webhook.site/0d90659d-0ff9-464b-8601-73d19ae173ad' //'https://pedrologapp.app.n8n.cloud/webhook/campanha-maes';
-            
-            // Animação do botão durante o envio
-            const button = this;
-            const originalText = button.innerHTML;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
-            button.disabled = true;
-            button.classList.remove('animate__pulse', 'animate__infinite');
-            
-            // Criar um timeout controller
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundos timeout
-            
+        // Botão confirmar e enviar - Código atualizado com mais logs e melhor tratamento de erros
+document.getElementById('btnConfirmar').addEventListener('click', function() {
+    // URL do webhook n8n
+    const webhookUrl = 'https://pedrologapp.app.n8n.cloud/webhook/campanha-maes';
+    
+    // Verificação adicional de dados
+    if (!formData || Object.keys(formData).length === 0) {
+        console.error('Erro: formData está vazio');
+        alert('Erro: Dados do formulário não encontrados. Por favor, tente novamente.');
+        return;
+    }
+    
+    // Log dos dados que serão enviados
+    console.log('Dados a serem enviados:', formData);
+    
+    // Animação do botão durante o envio
+    const button = this;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+    button.disabled = true;
+    button.classList.remove('animate__pulse', 'animate__infinite');
+    
+    // Criar um timeout controller
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // Aumento para 15 segundos
+    
+    // Converter o objeto formData para string JSON de forma segura
+    let jsonData;
+    try {
+        jsonData = JSON.stringify(formData);
+        console.log('JSON a ser enviado:', jsonData);
+    } catch (e) {
+        console.error('Erro ao converter para JSON:', e);
+        alert('Erro ao processar os dados. Por favor, tente novamente.');
+        
+        // Restaura o botão
+        button.innerHTML = originalText;
+        button.disabled = false;
+        button.classList.add('animate__pulse', 'animate__infinite');
+        return;
+    }
+    
+            // Enviar os dados
             fetch(webhookUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
-                body: JSON.stringify(formData),
+                body: jsonData,
                 signal: controller.signal
             })
             .then(response => {
                 clearTimeout(timeoutId);
+                
+                // Log da resposta para debug
+                console.log('Resposta do servidor:', response.status, response.statusText);
+                
+                // Tenta processar a resposta de qualquer servidor com status diferente de 2xx
+                if (response.status >= 400) {
+                    return response.text().then(text => {
+                        console.error('Texto de erro:', text);
+                        throw new Error(`Erro do servidor: ${response.status} ${response.statusText} - ${text}`);
+                    });
+                }
                 
                 // Se o servidor retornar 500, trata como sucesso (workaround)
                 if (response.status === 500) {
@@ -1061,13 +1100,20 @@
                     return { success: true };
                 }
                 
-                if (!response.ok && response.status !== 500) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                return response.json().catch(() => ({ success: true }));
+                // Tenta processar como JSON, mas aceita outros formatos se falhar
+                return response.text().then(text => {
+                    console.log('Resposta em texto:', text);
+                    try {
+                        return text ? JSON.parse(text) : { success: true };
+                    } catch (e) {
+                        console.log('Resposta não é JSON válido, mas continuando assim mesmo');
+                        return { success: true };
+                    }
+                });
             })
             .then(data => {
+                console.log('Dados processados com sucesso:', data);
+                
                 // Esconder tela de confirmação
                 document.getElementById('confirmationScreen').style.display = 'none';
                 
@@ -1085,18 +1131,22 @@
                 document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
             })
             .catch(error => {
-                console.error('Erro:', error);
+                console.error('Erro detalhado:', error);
+                
+                // Mostra mensagem de erro com mais detalhes
+                let errorMsg = 'Ocorreu um erro ao registrar sua indicação. Por favor, tente novamente.';
                 
                 // Se for erro de abort (timeout), mostra mensagem específica
                 if (error.name === 'AbortError') {
-                    document.getElementById('errorMessage').innerHTML = 
-                        '<h3><i class="fas fa-exclamation-circle"></i> Tempo Esgotado</h3>' +
-                        '<p>O servidor demorou muito para responder. Por favor, tente novamente.</p>';
+                    errorMsg = 'O servidor demorou muito para responder. Por favor, tente novamente.';
                 } else {
-                    document.getElementById('errorMessage').innerHTML = 
-                        '<h3><i class="fas fa-exclamation-circle"></i> Ops! Algo deu errado.</h3>' +
-                        '<p>Ocorreu um erro ao registrar sua indicação. Por favor, tente novamente.</p>';
+                    // Adiciona detalhes do erro para ajudar no debug
+                    errorMsg += '<br><small>' + error.message + '</small>';
                 }
+                
+                document.getElementById('errorMessage').innerHTML = 
+                    '<h3><i class="fas fa-exclamation-circle"></i> Ops! Algo deu errado.</h3>' +
+                    '<p>' + errorMsg + '</p>';
                 
                 document.getElementById('errorMessage').style.display = 'block';
                 document.getElementById('successMessage').style.display = 'none';

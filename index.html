@@ -390,6 +390,83 @@
             margin-right: 10px;
         }
         
+        /* Estilos para o número do sorteio */
+        .sorteio-number-container {
+            background: linear-gradient(135deg, #FFD100 0%, #FFE55C 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: center;
+            border: 3px solid #0066A4;
+            box-shadow: 0 8px 25px rgba(255, 209, 0, 0.4);
+            animation: pulse 2s infinite;
+        }
+        
+        .sorteio-label {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0066A4;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .sorteio-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #0066A4;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            margin: 10px 0;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 3px;
+        }
+        
+        .sorteio-info {
+            font-size: 0.95rem;
+            color: #004878;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .next-steps {
+            background-color: rgba(0, 102, 164, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .next-steps h4 {
+            color: #0066A4;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .next-steps h4 i {
+            margin-right: 8px;
+        }
+        
+        .next-steps p {
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 8px 25px rgba(255, 209, 0, 0.4);
+            }
+            50% {
+                transform: scale(1.02);
+                box-shadow: 0 12px 30px rgba(255, 209, 0, 0.6);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 8px 25px rgba(255, 209, 0, 0.4);
+            }
+        }
+        
         /* Contador de indicações - Ajustado para cor rosa */
         .counter-section {
             background-color: rgba(232, 62, 140, 0.08);
@@ -875,8 +952,21 @@
             
             <div id="successMessage" class="success-message animate__animated animate__fadeIn">
                 <h3><i class="fas fa-check-circle"></i> Parabéns! 🎉</h3>
-                <p>Sua indicação foi registrada com sucesso! Enviamos uma mensagem de confirmação para o seu WhatsApp e para o WhatsApp da família indicada</p>
-                <p>Após a confirmação de ambas, vocês receberão o número do sorteio.</p>
+                <p>Sua indicação foi registrada com sucesso!</p>
+                
+                <!-- Número do sorteio destacado -->
+                <div class="sorteio-number-container">
+                    <div class="sorteio-label">🎪 SEU NÚMERO DO SORTEIO 🎪</div>
+                    <div class="sorteio-number" id="numeroSorteio">123456</div>
+                    <div class="sorteio-info">Guarde bem este número! Ele será chamado no dia 15/06/2025 durante o evento São João do Amadeus!</div>
+                </div>
+                
+                <div class="next-steps">
+                    <h4><i class="fas fa-share-alt"></i> Próximos passos:</h4>
+                    <p>1. 📱 Compartilhe com sua amiga indicada para ela também confirmar</p>
+                    <p>2. 📅 Anote na agenda: <strong>15 de Junho de 2025</strong></p>
+                    <p>3. 🎊 Aguarde o sorteio durante o São João do Amadeus!</p>
+                </div>
             </div>
             
             <div id="errorMessage" class="error-message animate__animated animate__fadeIn">
@@ -981,6 +1071,21 @@
             document.getElementById(`step${step}`).classList.add('active');
         }
 
+        // Função para exibir número do sorteio (você pode chamar esta função manualmente)
+        function exibirNumeroSorteio(numeroID) {
+            // Atualizar o número no elemento
+            document.getElementById('numeroSorteio').textContent = numeroID;
+            
+            // Mostrar a mensagem de sucesso
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // Atualizar progresso para etapa 3
+            updateProgress(3);
+            
+            // Rolar para a mensagem
+            document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+        }
+
         // Manipular envio do formulário (primeiro passo - ir para confirmação)
         document.getElementById('indicacaoForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -1037,47 +1142,47 @@
         });
 
         // Botão confirmar e enviar - Código atualizado com mais logs e melhor tratamento de erros
-document.getElementById('btnConfirmar').addEventListener('click', function() {
-    // URL do webhook n8n
-    const webhookUrl = 'https://n8n.escolaamadeus.com/webhook-test/campanha-saojoao';
-    
-    // Verificação adicional de dados
-    if (!formData || Object.keys(formData).length === 0) {
-        console.error('Erro: formData está vazio');
-        alert('Erro: Dados do formulário não encontrados. Por favor, tente novamente.');
-        return;
-    }
-    
-    // Log dos dados que serão enviados
-    console.log('Dados a serem enviados:', formData);
-    
-    // Animação do botão durante o envio
-    const button = this;
-    const originalText = button.innerHTML;
-    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
-    button.disabled = true;
-    button.classList.remove('animate__pulse', 'animate__infinite');
-    
-    // Criar um timeout controller
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000); // Aumento para 15 segundos
-    
-    // Converter o objeto formData para string JSON de forma segura
-    let jsonData;
-    try {
-        jsonData = JSON.stringify(formData);
-        console.log('JSON a ser enviado:', jsonData);
-    } catch (e) {
-        console.error('Erro ao converter para JSON:', e);
-        alert('Erro ao processar os dados. Por favor, tente novamente.');
-        
-        // Restaura o botão
-        button.innerHTML = originalText;
-        button.disabled = false;
-        button.classList.add('animate__pulse', 'animate__infinite');
-        return;
-    }
-    
+        document.getElementById('btnConfirmar').addEventListener('click', function() {
+            // URL do webhook n8n
+            const webhookUrl = 'https://n8n.escolaamadeus.com/webhook-test/campanha-saojoao';
+            
+            // Verificação adicional de dados
+            if (!formData || Object.keys(formData).length === 0) {
+                console.error('Erro: formData está vazio');
+                alert('Erro: Dados do formulário não encontrados. Por favor, tente novamente.');
+                return;
+            }
+            
+            // Log dos dados que serão enviados
+            console.log('Dados a serem enviados:', formData);
+            
+            // Animação do botão durante o envio
+            const button = this;
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            button.disabled = true;
+            button.classList.remove('animate__pulse', 'animate__infinite');
+            
+            // Criar um timeout controller
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000); // Aumento para 15 segundos
+            
+            // Converter o objeto formData para string JSON de forma segura
+            let jsonData;
+            try {
+                jsonData = JSON.stringify(formData);
+                console.log('JSON a ser enviado:', jsonData);
+            } catch (e) {
+                console.error('Erro ao converter para JSON:', e);
+                alert('Erro ao processar os dados. Por favor, tente novamente.');
+                
+                // Restaura o botão
+                button.innerHTML = originalText;
+                button.disabled = false;
+                button.classList.add('animate__pulse', 'animate__infinite');
+                return;
+            }
+            
             // Enviar os dados
             fetch(webhookUrl, {
                 method: 'POST',
@@ -1125,18 +1230,22 @@ document.getElementById('btnConfirmar').addEventListener('click', function() {
                 // Esconder tela de confirmação
                 document.getElementById('confirmationScreen').style.display = 'none';
                 
-                // Mostra mensagem de sucesso
-                document.getElementById('successMessage').style.display = 'block';
-                document.getElementById('errorMessage').style.display = 'none';
+                // Gerar número do sorteio (você pode substituir por lógica do n8n)
+                let numeroSorteio = '123456'; // Valor padrão
                 
-                // Atualiza a barra de progresso para etapa 3
-                updateProgress(3);
+                // Se o n8n retornar o ID, use ele
+                if (data && data.ID) {
+                    numeroSorteio = data.ID;
+                } else {
+                    // Gerar número baseado no timestamp
+                    numeroSorteio = Date.now().toString().slice(-6);
+                }
+                
+                // Chamar função para exibir o número
+                exibirNumeroSorteio(numeroSorteio);
                 
                 // Limpar formulário
                 document.getElementById('indicacaoForm').reset();
-                
-                // Rola para a mensagem de sucesso
-                document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
             })
             .catch(error => {
                 console.error('Erro detalhado:', error);

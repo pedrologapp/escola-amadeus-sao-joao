@@ -801,6 +801,27 @@
                                 <input type="text" id="nomeFilhoMae" name="nomeFilhoMae" class="input-with-icon" placeholder="Nome do seu filho ou filha" required>
                             </div>
                         </div>
+                        
+                        <div class="form-group input-icon-wrapper">
+                            <i class="fas fa-calendar-alt input-icon"></i>
+                            <label for="serieFilhoMae">Série/ano que o(a) filho(a) está cursando</label>
+                            <select id="serieFilhoMae" name="serieFilhoMae" class="input-with-icon" required>
+                                <option value="">Selecione a série/ano...</option>
+                                <option value="Martelnalzinho">Marternalzinho II</option>
+                                <option value="Martelnal">Marternal III</option>
+                                <option value="grupo4">Grupo 4</option>
+                                <option value="grupo5">Grupo 5</option>
+                                <option value="1º Ano">1º Ano - Ensino Fundamental</option>
+                                <option value="2º Ano">2º Ano - Ensino Fundamental</option>
+                                <option value="3º Ano">3º Ano - Ensino Fundamental</option>
+                                <option value="4º Ano">4º Ano - Ensino Fundamental</option>
+                                <option value="5º Ano">5º Ano - Ensino Fundamental</option>
+                                <option value="6º Ano">6º Ano - Ensino Fundamental</option>
+                                <option value="7º Ano">7º Ano - Ensino Fundamental</option>
+                                <option value="8º Ano">8º Ano - Ensino Fundamental</option>
+                                <option value="9º Ano">9º Ano - Ensino Fundamental</option>
+                            </select>
+                        </div>
                     </div>
                     
                     <!-- Dados da Amiga Indicada -->
@@ -843,30 +864,25 @@
                             </div>
                             
                             <div class="form-group col input-icon-wrapper">
-                                <i class="fas fa-school input-icon"></i>
-                                <label for="escolaFilhoAmiga">Escola onde o(a) filho(a) estuda</label>
-                                <input type="text" id="escolaFilhoAmiga" name="escolaFilhoAmiga" class="input-with-icon" placeholder="Nome da escola" required>
+                                <i class="fas fa-calendar-alt input-icon"></i>
+                                <label for="serieFilhoAmiga">Série/ano que o(a) filho(a) está cursando</label>
+                                <select id="serieFilhoAmiga" name="serieFilhoAmiga" class="input-with-icon" required>
+                                    <option value="">Selecione a série/ano...</option>
+                                    <option value="Martelnalzinho">Marternalzinho II</option>
+                                    <option value="Martelnal">Marternal III</option>
+                                    <option value="grupo4">Grupo 4</option>
+                                    <option value="grupo5">Grupo 5</option>
+                                    <option value="1º Ano">1º Ano - Ensino Fundamental</option>
+                                    <option value="2º Ano">2º Ano - Ensino Fundamental</option>
+                                    <option value="3º Ano">3º Ano - Ensino Fundamental</option>
+                                    <option value="4º Ano">4º Ano - Ensino Fundamental</option>
+                                    <option value="5º Ano">5º Ano - Ensino Fundamental</option>
+                                    <option value="6º Ano">6º Ano - Ensino Fundamental</option>
+                                    <option value="7º Ano">7º Ano - Ensino Fundamental</option>
+                                    <option value="8º Ano">8º Ano - Ensino Fundamental</option>
+                                    <option value="9º Ano">9º Ano - Ensino Fundamental</option>
+                                </select>
                             </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="serieFilhoAmiga">Série/ano que o(a) filho(a) está cursando</label>
-                            <select id="serieFilhoAmiga" name="serieFilhoAmiga" required>
-                                <option value="">Selecione a série/ano...</option>
-                                <option value="Berçário">Berçário</option>
-                                <option value="Maternal">Maternal</option>
-                                <option value="Jardim">Jardim</option>
-                                <option value="Pré-escola">Pré-escola</option>
-                                <option value="1º Ano">1º Ano - Ensino Fundamental</option>
-                                <option value="2º Ano">2º Ano - Ensino Fundamental</option>
-                                <option value="3º Ano">3º Ano - Ensino Fundamental</option>
-                                <option value="4º Ano">4º Ano - Ensino Fundamental</option>
-                                <option value="5º Ano">5º Ano - Ensino Fundamental</option>
-                                <option value="6º Ano">6º Ano - Ensino Fundamental</option>
-                                <option value="7º Ano">7º Ano - Ensino Fundamental</option>
-                                <option value="8º Ano">8º Ano - Ensino Fundamental</option>
-                                <option value="9º Ano">9º Ano - Ensino Fundamental</option>
-                            </select>
                         </div>
                     </div>
                     
@@ -907,13 +923,13 @@
                         <span class="data-value" id="confirmNomeFilhoMae"></span>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">Escola:</span>
-                        <span class="data-value" id="confirmEscolaFilhoAmiga"></span>
+                        <span class="data-label">Série/ano cursando:</span>
+                        <span class="data-value" id="confirmSerieFilhoMae"></span>
                     </div>
                 </div>
                 
                 <div class="confirmation-data">
-                    <h3><span class="icon"></span> Dados do responsável da família indicada</h3>
+                    <h3><span class="icon">👩‍👦</span> Dados do responsável da família indicada</h3>
                     <div class="data-row">
                         <span class="data-label">Nome completo:</span>
                         <span class="data-value" id="confirmNomeAmiga"></span>
@@ -1111,12 +1127,12 @@
             document.getElementById('confirmWhatsappMae').textContent = formData.whatsappMae;
             document.getElementById('confirmEmailMae').textContent = formData.emailMae;
             document.getElementById('confirmNomeFilhoMae').textContent = formData.nomeFilhoMae;
+            document.getElementById('confirmSerieFilhoMae').textContent = formData.serieFilhoMae;
             document.getElementById('confirmNomeAmiga').textContent = formData.nomeAmiga;
             document.getElementById('confirmWhatsappAmiga').textContent = formData.whatsappAmiga;
             document.getElementById('confirmCidadeAmiga').textContent = formData.cidadeAmiga;
             document.getElementById('confirmBairroAmiga').textContent = formData.bairroAmiga;
             document.getElementById('confirmNomeFilhoAmiga').textContent = formData.nomeFilhoAmiga;
-            document.getElementById('confirmEscolaFilhoAmiga').textContent = formData.escolaFilhoAmiga;
             document.getElementById('confirmSerieFilhoAmiga').textContent = formData.serieFilhoAmiga;
             
             // IMPORTANTE: Ocultar completamente a tela de formulário
@@ -1280,7 +1296,7 @@
         document.getElementById('whatsappAmiga').addEventListener('blur', function() {
             if (!validateDifferentPhones()) {
                 this.style.borderColor = '#dc3545';
-                alert('O número de WhatsApp da amiga deve ser diferente do seu número.');
+                alert('O número de WhatsApp da pessoa indicada deve ser diferente do seu número.');
             } else {
                 this.style.borderColor = '';
             }

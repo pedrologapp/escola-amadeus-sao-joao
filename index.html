@@ -906,6 +906,10 @@
                         <span class="data-label">Nome do(a) filho(a):</span>
                         <span class="data-value" id="confirmNomeFilhoMae"></span>
                     </div>
+                    <div class="data-row">
+                        <span class="data-label">Escola:</span>
+                        <span class="data-value" id="confirmEscolaFilhoAmiga"></span>
+                    </div>
                 </div>
                 
                 <div class="confirmation-data">
@@ -929,10 +933,6 @@
                     <div class="data-row">
                         <span class="data-label">Nome do(a) filho(a):</span>
                         <span class="data-value" id="confirmNomeFilhoAmiga"></span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Escola:</span>
-                        <span class="data-value" id="confirmEscolaFilhoAmiga"></span>
                     </div>
                     <div class="data-row">
                         <span class="data-label">Série/ano:</span>
@@ -1144,7 +1144,7 @@
         // Botão confirmar e enviar - Código atualizado com mais logs e melhor tratamento de erros
         document.getElementById('btnConfirmar').addEventListener('click', function() {
             // URL do webhook n8n
-            const webhookUrl = 'https://n8n.escolaamadeus.com/webhook-test/campanha-saojoao';
+            const webhookUrl = 'https://webhook.escolaamadeus.com/webhook/campanha-saojoao';
             
             // Verificação adicional de dados
             if (!formData || Object.keys(formData).length === 0) {
